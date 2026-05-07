@@ -34,11 +34,19 @@ async def chat(request: ChatRequest):
 
     sources = []
 
-    for doc in retrieved_docs:
-        sources.append({
-            "page": doc.metadata.get("page")
-        })
+    seen_pages = set()
 
+    for doc in retrieved_docs:
+
+        page = doc.metadata.get("page")
+
+        if page not in seen_pages:
+
+            seen_pages.add(page)
+
+            sources.append({
+                "page": page
+            })
     return {
         "question": query,
         "answer": answer,
