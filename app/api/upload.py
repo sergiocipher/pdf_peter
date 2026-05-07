@@ -6,7 +6,7 @@ from app.services.pdf_loader import load_pdf
 
 from app.services.chunking import chunk_documents
 
-from app.services.emdeddings import get_embedding_model
+from app.services.embeddings import get_embedding_model
 
 from app.services.vector_store import store_documents
 
