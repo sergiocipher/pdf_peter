@@ -6,6 +6,8 @@ from app.services.pdf_loader import load_pdf
 
 from app.services.chunking import chunk_documents
 
+from app.services.emdeddings import get_embedding_model
+
 router = APIRouter()
 
 Upload_DIR = "uploads"
@@ -36,10 +38,18 @@ async def upload_pdf(file: UploadFile = File(...)):
     #chunk document 
     chunks = chunk_documents(documents)
 
+    #embedding 
+    embedding_model = get_embedding_model()
+
+    #test embedding 
+    sample_vector = embedding_model.embed_query(
+        chunks[0].page_content
+    )
+
 
     return{
         "message":"PDF uploaded and parsed succesfully !!",
         "total_pages": len(documents),
         "total_chunks": len(chunks),
-        "sample_chunk": chunks[0].page_content
+        "embedding_dimension": len(sample_vector)
     }
