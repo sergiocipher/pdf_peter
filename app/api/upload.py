@@ -4,6 +4,8 @@ import shutil
 
 from app.services.pdf_loader import load_pdf
 
+from app.services.chunking import chunk_documents
+
 router = APIRouter()
 
 Upload_DIR = "uploads"
@@ -31,10 +33,13 @@ async def upload_pdf(file: UploadFile = File(...)):
     #load pdf 
     documents = load_pdf(file_path)
 
+    #chunk document 
+    chunks = chunk_documents(documents)
+
 
     return{
         "message":"PDF uploaded and parsed succesfully !!",
         "total_pages": len(documents),
-        "sample_text": documents[0].page_content[:500]
-        
+        "total_chunks": len(chunks),
+        "sample_chunk": chunks[0].page_content
     }
