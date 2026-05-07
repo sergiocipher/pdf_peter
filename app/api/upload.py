@@ -8,6 +8,8 @@ from app.services.chunking import chunk_documents
 
 from app.services.emdeddings import get_embedding_model
 
+from app.services.vector_store import store_documents
+
 router = APIRouter()
 
 Upload_DIR = "uploads"
@@ -46,6 +48,9 @@ async def upload_pdf(file: UploadFile = File(...)):
         chunks[0].page_content
     )
 
+    #store in qdrant 
+    store_documents(chunks=chunks, embedding_model=embedding_model)
+
 
     return{
         "message":"PDF uploaded and parsed succesfully !!",
@@ -53,3 +58,5 @@ async def upload_pdf(file: UploadFile = File(...)):
         "total_chunks": len(chunks),
         "embedding_dimension": len(sample_vector)
     }
+
+# sudo docker run -p 6333:6333 qdrant/qdrant
