@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env
+.env.* 
+.venv.bak/
+
+# Packaging / build
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# IDEs & editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and runtime files
+*.log
+logs/
+*.out
+nohup.out
+
+# Test / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Caches
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Uploaded files / data / artifacts
+uploads/
+data/
+models/
+*.tar.gz
+*.zip
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets / keys
+*.pem
+*.key
+*.crt
+
+# Hugging Face / ML caches
+.cache/huggingface/
+transformers_cache/
+datasets_cache/
+hf_home/
+
+# Misc
+*.bak
+*.swp
