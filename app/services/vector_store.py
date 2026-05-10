@@ -1,3 +1,4 @@
+import logging
 from langchain_qdrant import QdrantVectorStore
 
 from app.core.config import (
@@ -5,18 +6,31 @@ from app.core.config import (
     QDRANT_API_KEY
 )
 
+logger = logging.getLogger(__name__)
+
+COLLECTION_NAME = "rag-notebooklm"
+
 
 def store_documents(
     chunks,
     embedding_model
 ):
-
-    vector_store = QdrantVectorStore.from_documents(
-        documents=chunks,
-        embedding=embedding_model,
-        url=QDRANT_URL,
-        api_key=QDRANT_API_KEY,
-        collection_name="rag-notebooklm"
+    logger.info(
+        f"Storing {len(chunks)} chunks in Qdrant collection '{COLLECTION_NAME}'"
     )
 
-    return vector_store
+    try:
+        vector_store = QdrantVectorStore.from_documents(
+            documents=chunks,
+            embedding=embedding_model,
+            url=QDRANT_URL,
+            api_key=QDRANT_API_KEY,
+            collection_name=COLLECTION_NAME
+        )
+
+        logger.info(f"✅ Successfully stored {len(chunks)} chunks in Qdrant")
+        return vector_store
+
+    except Exception as e:
+        logger.error(f"❌ Failed to store documents in Qdrant: {e}")
+        raise

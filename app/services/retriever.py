@@ -1,3 +1,4 @@
+import logging
 from langchain_qdrant import QdrantVectorStore
 
 from app.core.config import (
@@ -5,24 +6,41 @@ from app.core.config import (
     QDRANT_API_KEY
 )
 
+logger = logging.getLogger(__name__)
+
+COLLECTION_NAME = "rag-notebooklm"
+
 
 def retrieve_chunks(
     query,
     embedding_model,
     k=5
 ):
-
-    vector_store = QdrantVectorStore.from_existing_collection(
-        embedding=embedding_model,
-        url=QDRANT_URL,
-        api_key=QDRANT_API_KEY,
-        collection_name="rag-notebooklm"
+    logger.info(
+        f"Retrieving top-{k} chunks for query: '{query[:80]}...'"
     )
 
-    retriever = vector_store.as_retriever(
-        search_kwargs={"k": k}
-    )
+    try:
+        vector_store = QdrantVectorStore.from_existing_collection(
+            embedding=embedding_model,
+            url=QDRANT_URL,
+            api_key=QDRANT_API_KEY,
+            collection_name=COLLECTION_NAME
+        )
 
-    results = retriever.invoke(query)
+        retriever = vector_store.as_retriever(
+            search_kwargs={"k": k}
+        )
 
-    return results
+        results = retriever.invoke(query)
+
+        logger.info(f"✅ Retrieved {len(results)} chunks")
+        for i, doc in enumerate(results):
+            page = doc.metadata.get("page", "?")
+            logger.debug(f"  Chunk {i+1}: page {page}, {len(doc.page_content)} chars")
+
+        return results
+
+    except Exception as e:
+        logger.error(f"❌ Retrieval failed: {e}")
+        raise
